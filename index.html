@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NI KO GAME SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:white;font-family:Arial,sans-serif}
+header{background:#17264a;padding:20px 12px;text-align:center}
+header h1{color:#65e1ff;margin:0}
+header p{color:#ccc;margin:8px 0 0}
+main{max-width:950px;margin:auto;padding:15px;padding-bottom:85px}
+.page{display:none}
+.page.active{display:block}
+h2{font-size:20px}
+.card{background:#192744;border:1px solid #344b70;border-radius:13px;padding:15px;margin:12px 0}
+.games,.products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.game,.product{background:#192744;border:1px solid #344b70;border-radius:12px;padding:12px;text-align:center;cursor:pointer}
+.game.active,.product.selected{border:2px solid #65e1ff}
+.game img{width:100%;height:85px;object-fit:contain;border-radius:8px}
+.game strong{display:block;margin-top:8px;font-size:14px}
+.product{text-align:left;font-size:14px}
+.product b{display:block;color:#ffd166;margin-top:8px}
+button{background:#65dfff;color:#071322;padding:12px;border:0;border-radius:8px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+input,textarea{width:100%;padding:12px;margin:7px 0;background:#0b1020;color:white;border:1px solid #456;border-radius:8px}
+.full{width:100%;margin-top:10px}
+.small{font-size:12px;color:#aaa;line-height:1.6}
+.balance{font-size:29px;color:#65e1ff;font-weight:bold;margin:15px 0}
+.item{display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:1px solid #344b70;padding:12px 0}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#17264a;display:flex;justify-content:space-around;padding:10px 2px;z-index:5}
+.bottom button{background:transparent;color:white;padding:8px 4px;font-size:12px}
+.bottom button.active{color:#65e1ff}
+.banner{background:linear-gradient(120deg,#174b73,#31245c);padding:22px;border-radius:14px;margin:15px 0}
+.banner h2{color:#65e1ff}
+.notice{background:#352c18;border:1px solid #78612a;padding:12px;border-radius:10px;color:#ffe3a0;font-size:13px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header>
+<h1>NI KO GAME SHOP</h1>
+<p>💎 GAME TOP UP • FAST SERVICE</p>
+</header>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="page active">
+<div class="banner">
+<h2>Welcome to NI KO GAME SHOP 🎮</h2>
+<p>Game Item များကို လွယ်ကူစွာ ရွေးချယ်ဝယ်ယူနိုင်ပါပြီ။</p>
+</div>
+<div class="notice">📢 NI KO GAME SHOP မှ ကြိုဆိုပါတယ်။ Package ရွေးပြီး Order တင်နိုင်ပါတယ်။</div>
+<h2>🎮 All Games</h2>
+<div class="games" id="homeGames"></div>
+</section>
+
+<!-- ORDER -->
+<section id="order" class="page">
+<h2>🛒 Game Top Up</h2>
+<div class="games" id="games"></div>
+<h2 id="heading">📦 Packages</h2>
+<div class="products" id="products"></div>
+<div class="card">
+<h2>Order Details</h2>
+<input id="uid" placeholder="Game ID / UID">
+<input id="server" placeholder="Server ID (လိုအပ်ပါက)">
+<input id="username" placeholder="Telegram Username">
+<textarea id="note" placeholder="မှတ်ချက်"></textarea>
+<button class="full" onclick="addCart()">🛍️ Cart ထဲထည့်ရန်</button>
+<button class="full" onclick="sendOrder()">Order ကို Admin ဆီပို့ရန်</button>
+</div>
+</section>
+
+<!-- WALLET -->
+<section id="wallet" class="page">
+<h2>💰 My Wallet</h2>
+<div class="card">
+<p>Wallet Balance</p>
+<div class="balance">0 MMK</div>
+<p class="small">Demo Wallet ဖြစ်ပါသည်။ တကယ့်ငွေလက်ကျန် မဟုတ်ပါ။</p>
+</div>
+<div class="card">
+<h3>💵 Top Up Balance</h3>
+<p>ငွေဖြည့်လိုပါက Admin ကို ဆက်သွယ်ပါ။</p>
+<button class="full" onclick="contactAdmin()">💬 Customer Support</button>
+</div>
+<div class="notice">
+⚠️ ဒီ Wallet သည် Design Demo သာဖြစ်ပြီး ငွေလွှဲခြင်း၊ Balance တိုးခြင်း မလုပ်ဆောင်ပါ။
+</div>
+</section>
+
+<!-- CART -->
+<section id="cart" class="page">
+<h2>🛍️ My Cart</h2>
+<div class="card" id="cartList">Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ။</div>
+<button class="full" onclick="sendCart()">Order အားလုံးပို့ရန်</button>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="page">
+<h2>📋 Order History</h2>
+<div class="card" id="historyList">Order မှတ်တမ်း မရှိသေးပါ။</div>
+<p class="small">ဒီမှတ်တမ်းသည် ဒီဖုန်း Browser ထဲမှာသာ သိမ်းထားသော Demo ဖြစ်သည်။</p>
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+<h2>👤 My Profile</h2>
+<div class="card">
+<h3>NI KO GAME SHOP Customer</h3>
+<input id="profileName" placeholder="သင့်နာမည်">
+<input id="profileTelegram" placeholder="Telegram Username">
+<button class="full" onclick="saveProfile()">Save Profile</button>
+<p id="profileMsg" class="small"></p>
+</div>
+<div class="card">
+<button class="full" onclick="contactAdmin()">💬 Customer Support</button>
+</div>
+<p class="small">Profile သည် Demo ဖြစ်ပြီး လုံခြုံသော Login/Register စနစ် မပါဝင်သေးပါ။</p>
+</section>
+
+</main>
+
+<nav class="bottom">
+<button class="active" onclick="showPage('home',this)">🏠<br>Home</button>
+<button onclick="showPage('order',this)">🎮<br>Order</button>
+<button onclick="showPage('wallet',this)">💰<br>Wallet</button>
+<button onclick="showPage('cart',this)">🛍️<br>Cart</button>
+<button onclick="showPage('profile',this)">👤<br>Profile</button>
+</nav>
+
+<script>
+const data=[
+{name:"Mobile Legends",img:"https://is4-ssl.mzstatic.com/image/thumb/Purple126/v4/0e/ae/e4/0eaee45b-a414-e99b-2eed-b7868478f522/AppIcon-0-0-1x_U007emarketing-0-0-0-6-0-0-sRGB-0-512MB-85-220-0-0.png/512x512bb.jpg",items:[
+["Weekly Pass",6731],["Weekly Pass x2",13262],["Weekly Pass x3",19794],["Twilight Pass",34117],
+["12",1436],["14",1517],["42",4149],["Weekly Elite Bundle",3576],["Monthly Epic Bundle",16880],
+["50+50 Double",3576],["150+150 Double",10221],["250+250 Double",16295],["500+500 Double",33046],
+["11 Diamonds",1449],["56 Diamonds",5480],["86 Diamonds",5412],["172 Diamonds",10606],["257 Diamonds",15363],
+["343 Diamonds",20380],["429 Diamonds",25581],["514 Diamonds",30226],["600 Diamonds",35456],["706 Diamonds",41028],
+["792 Diamonds",46022],["878 Diamonds",51057],["2195 Diamonds",124278],["3688 Diamonds",205223],["5532 Diamonds",311705]]},
+{name:"PUBG Mobile",img:"https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/7f/cd/91/7fcd912b-0e42-e335-91d6-763d2a13e814/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",items:[
+["First Purchase Pack",4586],["Prime 1 Month",4588],["Prime 3 Months",13322],["Prime 6 Months",26519],["Prime 12 Months",52835],
+["Prime Plus 1 Month",43862],["Prime Plus 3 Months",130788],["Prime Plus 6 Months",257222],["Prime Plus 12 Months",518664],
+["Weekly Mythic Emblem",13588],["Firearm Materials Pack",13959],["Mythic Emblem Pack",21528],
+["Weekly Deal Pack 1",4565],["Weekly Deal Pack 2",13278],["Elite Pass LV1-50",26113],["Elite Pass LV1-100",52270],
+["60 UC",4511],["325 UC",21694],["660 UC",42862],["1800 UC",107476],["3850 UC",214052],["8100 UC",427813]]},
+{name:"Telegram Premium",img:"https://telegram.org/img/t_logo.png",items:[
+["Premium 3 Month",60129],["Premium 6 Months",80922],["Premium 12 Months",144199],
+["50 Stars",4073],["100 Stars",7809],["150 Stars",11582],["250 Stars",18872],["500 Stars",37443]]},
+{name:"Magic Chess Go Go",img:"https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e3/db/fb/e3dbfb2e-a8f9-94d9-2610-be1d3975e665/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",items:[
+["Weekly Pass",8714],["50+50 Double",3732],["150+150 Double",10391],["250+250 Double",17245],["500+500 Double",34094],
+["172 Diamonds",10866],["257 Diamonds",16148],["86 Diamonds",5638],["706 Diamonds",42417],["2195 Diamonds",127006],
+["3688 Diamonds",211329],["5532 Diamonds",316356],["9288 Diamonds",526399]]},
+{name:"Honor Of Kings",img:"https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/a4/b8/3e/a4b83e06-18af-9786-cdb5-f16ad0fbb340/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",items:[
+["16 Tokens",1078],["80 Tokens",4343],["240 Tokens",12483],["400 Tokens",20670],["560 Tokens",28957],
+["800+30 Tokens",41140],["1200+45 Tokens",61511],["2400+108 Tokens",122570],["4000+180 Tokens",205000],
+["8000+360 Tokens",407801],["Weekly Card",4792],["Weekly Card Plus",14171],["Double Token Lucky Bag",1850],
+["Standard Purchase Rebate Pack",1840],["Premium Purchase Rebate Pack",5984],["Honor Point Value Pack",1840]]}
+];
+
+let active=0,selected=null,cart=[];
+
+function showPage(id,btn){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".bottom button").forEach(b=>b.classList.remove("active"));
+if(btn)btn.classList.add("active");
+if(id==="cart")renderCart();
+if(id==="history")renderHistory();
+}
+
+function renderGames(containerId){
+let el=document.getElementById(containerId);
+el.innerHTML="";
+data.forEach((g,i)=>{
+let b=document.createElement("div");
+b.className="game"+(i===active?" active":"");
+b.innerHTML=`<img src="${g.img}" onerror="this.style.display='none'"><strong>${g.name}</strong>`;
+b.onclick=()=>{
+active=i;selected=null;
+render();
+showPage("order",document.querySelectorAll(".bottom button")[1]);
+};
+el.appendChild(b);
+});
+}
+
+function renderProducts(){
+let g=data[active];
+document.getElementById("heading").textContent="📦 "+g.name+" Packages";
+let p=document.getElementById("products");
+p.innerHTML="";
+g.items.forEach(([name,price])=>{
+let b=document.createElement("div");
+b.className="product";
+b.innerHTML=`${name}<b>${price.toLocaleString()} Ks</b>`;
+b.onclick=()=>{
+selected={game:g.name,name,price};
+document.querySelectorAll(".product").forEach(x=>x.classList.remove("selected"));
+b.classList.add("selected");
+};
+p.appendChild(b);
+});
+}
+
+function render(){
+renderGames("games");
+renderGames("homeGames");
+renderProducts();
+}
+
+function getDetails(){
+return {
+uid:document.getElementById("uid").value.trim(),
+server:document.getElementById("server").value.trim(),
+username:document.getElementById("username").value.trim(),
+note:document.getElementById("note").value.trim()
+};
+}
+
+function addCart(){
+if(!selected){alert("Package အရင်ရွေးပါ");return}
+let d=getDetails();
+if(!d.uid){alert("Game ID ထည့်ပါ");return}
+cart.push({...selected,...d});
+alert("Cart ထဲထည့်ပြီးပါပြီ။");
+renderCart();
+}
+
+function renderCart(){
+let box=document.getElementById("cartList");
+if(!cart.length){box.textContent="Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ။";return}
+box.innerHTML="";
+cart.forEach((x,i)=>{
+let div=document.createElement("div");
+div.className="item";
+div.innerHTML=`<span>${x.game}<br>${x.name}<br>${x.price.toLocaleString()} Ks</span><button onclick="removeCart(${i})">ဖယ်ရန်</button>`;
+box.appendChild(div);
+});
+let total=cart.reduce((s,x)=>s+x.price,0);
+let t=document.createElement("h3");
+t.textContent="စုစုပေါင်း: "+total.toLocaleString()+" Ks";
+box.appendChild(t);
+}
+
+function removeCart(i){cart.splice(i,1);renderCart()}
+
+function sendMessage(msg){
+window.open("https://t.me/Nshdndhd?text="+encodeURIComponent(msg),"_blank");
+}
+
+function sendOrder(){
+if(!selected){alert("Package အရင်ရွေးပါ");return}
+let d=getDetails();
+if(!d.uid){alert("Game ID ထည့်ပါ");return}
+let msg=`NI KO GAME SHOP ORDER
+Game: ${selected.game}
+Package: ${selected.name}
+Price: ${selected.price} Ks
+Game ID: ${d.uid}
+Server: ${d.server}
+Telegram: ${d.username}
+Note: ${d.note}`;
+sendMessage(msg);
+saveHistory(msg);
+}
+
+function sendCart(){
+if(!cart.length){alert("Cart ထဲမှာ ပစ္စည်းမရှိပါ");return}
+let msg="NI KO GAME SHOP CART ORDER\n";
+cart.forEach((x,i)=>{
+msg+=`\n${i+1}. ${x.game} - ${x.name} - ${x.price} Ks\nUID: ${x.uid}\nServer: ${x.server}\n`;
+});
+msg+="\nTotal: "+cart.reduce((s,x)=>s+x.price,0)+" Ks";
+sendMessage(msg);
+saveHistory(msg);
+cart=[];
+renderCart();
+}
+
+function saveHistory(msg){
+let h=JSON.parse(localStorage.getItem("niko_history")||"[]");
+h.unshift(msg);
+localStorage.setItem("niko_history",JSON.stringify(h.slice(0,20)));
+}
+
+function renderHistory(){
+let h=JSON.parse(localStorage.getItem("niko_history")||"[]");
+let box=document.getElementById("historyList");
+box.innerHTML="";
+if(!h.length){box.textContent="Order မှတ်တမ်း မရှိသေးပါ။";return}
+h.forEach(x=>{
+let d=document.createElement("div");
+d.className="item";
+d.textContent=x;
+box.appendChild(d);
+});
+}
+
+function saveProfile(){
+localStorage.setItem("niko_profile",JSON.stringify({
+name:document.getElementById("profileName").value,
+telegram:document.getElementById("profileTelegram").value
+}));
+document.getElementById("profileMsg").textContent="ဒီဖုန်းမှာ Demo Profile သိမ်းပြီးပါပြီ။";
+}
+
+function contactAdmin(){
+window.open("https://t.me/Nshdndhd","_blank");
+}
+
+render();
+</script>
+</body>
+</html>
