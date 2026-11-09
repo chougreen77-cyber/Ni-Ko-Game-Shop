@@ -1,0 +1,1 @@
+# Ni-Ko-Game-Shop
