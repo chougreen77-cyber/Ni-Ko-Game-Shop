@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NI KO GAME SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6fb;color:#202638;font-family:Arial,sans-serif}
+header{background:#171d35;color:white;padding:18px 15px}
+.top{max-width:1000px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-size:21px;font-weight:bold;color:#00e5ff}
+.top a{color:white;text-decoration:none;background:#27345b;padding:10px 13px;border-radius:9px}
+.hero{background:linear-gradient(120deg,#17264d,#442b78);color:white;padding:30px 18px;text-align:center}
+.hero h1{font-size:27px;margin:5px}
+.hero p{color:#d8ddf5}
+.container{max-width:1000px;margin:auto;padding:15px}
+.section-title{font-size:20px;margin:25px 0 14px}
+.games{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.game{background:white;border:1px solid #e1e5ef;border-radius:13px;padding:17px;text-align:center;cursor:pointer;font-weight:bold}
+.game.active{border:2px solid #6545db;color:#6545db}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.product{background:white;border:1px solid #e4e7ef;border-radius:13px;padding:14px}
+.product h3{font-size:16px;margin:3px 0 8px}
+.price{font-weight:bold;color:#6545db;font-size:17px}
+button{border:0;background:#6545db;color:white;padding:11px;border-radius:9px;font-weight:bold;cursor:pointer}
+.product button{width:100%;margin-top:10px}
+.panel{background:white;border:1px solid #e4e7ef;border-radius:14px;padding:17px;margin-top:14px}
+input,select{width:100%;padding:13px;border:1px solid #d8dce7;border-radius:9px;margin:7px 0 12px;font-size:15px;background:white}
+label{font-size:14px;font-weight:bold}
+.deposit-wrap{display:flex;justify-content:center}
+.deposit{width:100%;max-width:430px;text-align:center;border:2px solid #20b56b}
+.deposit h2{color:#159b59}
+.deposit button{background:#159b59;width:100%}
+.payinfo{background:#f0fff6;border-radius:10px;padding:12px;margin:12px 0;line-height:1.8}
+.notice{font-size:13px;color:#667085;line-height:1.6}
+footer{text-align:center;background:#171d35;color:#ddd;padding:23px;margin-top:30px}
+@media(min-width:650px){
+.games{grid-template-columns:repeat(4,1fr)}
+.products{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="top">
+  <div class="logo">🎮 NI KO GAME SHOP</div>
+  <a href="#deposit">💰 ငွေဖြည့်ရန်</a>
+ </div>
+</header>
+
+<section class="hero">
+ <h1>NI KO GAME SHOP</h1>
+ <p>Game Top Up Store</p>
+ <p>💎 MLBB Diamond | PUBG UC</p>
+</section>
+
+<main class="container">
+
+<h2 class="section-title">🎮 Game ရွေးချယ်ပါ</h2>
+<div class="games">
+ <div class="game active" onclick="showGame('MLBB',this)">💎<br>Mobile Legends</div>
+ <div class="game" onclick="showGame('PUBG',this)">🎯<br>PUBG Special</div>
+ <div class="game" onclick="showGame('CN',this)">🌏<br>PUBG CN Global</div>
+ <div class="game" onclick="showGame('PASS',this)">🎁<br>MLBB Pass</div>
+</div>
+
+<h2 class="section-title" id="productTitle">💎 MLBB Diamond</h2>
+<div class="products" id="products"></div>
+
+<h2 class="section-title">🛒 Order မှာရန်</h2>
+<div class="panel">
+ <form id="orderForm">
+  <label>ရွေးထားသော ပစ္စည်း</label>
+  <input id="chosen" placeholder="အပေါ်က ပစ္စည်းကို ရွေးပါ" required>
+
+  <label>Game ID</label>
+  <input id="player" placeholder="Game ID ထည့်ပါ" required>
+
+  <label>Server ID</label>
+  <input id="server" placeholder="Server ID ထည့်ပါ">
+
+  <label>Game Name</label>
+  <input id="gameName" placeholder="Game Name ထည့်ပါ">
+
+  <button type="submit" style="width:100%">📩 Telegram မှ Order တင်မည်</button>
+ </form>
+ <p class="notice">Order တင်ပြီးနောက် Telegram မှာ Admin ထံ ပို့ရန် အတည်ပြုပါ။</p>
+</div>
+
+<h2 class="section-title" id="deposit">💰 ငွေဖြည့်ရန်</h2>
+<div class="deposit-wrap">
+ <div class="panel deposit">
+  <h2>💚 DEPOSIT</h2>
+  <p>ငွေဖြည့်လိုသော ပမာဏထည့်ပါ</p>
+  <input id="amount" type="number" min="1" placeholder="ဥပမာ - 5000 Ks">
+
+  <div class="payinfo">
+   <b>WavePay</b><br>
+   ဖုန်းနံပါတ် - 09682380920<br>
+   အမည် - Pan Ei Zin
+  </div>
+
+  <button onclick="deposit()">ငွေဖြည့်တင်မည်</button>
+  <p class="notice">ငွေလွှဲပြီးပါက ပြေစာ Screenshot ကို Telegram မှာ Admin ထံ ပို့ပါ။</p>
+ </div>
+</div>
+
+<h2 class="section-title">📞 Customer Service</h2>
+<div class="panel" style="text-align:center">
+ <p>Admin - @Nshdndhd</p>
+ <a href="https://t.me/Nshdndhd">Admin ကို ဆက်သွယ်ရန်</a>
+</div>
+
+</main>
+
+<footer>
+ NI KO GAME SHOP<br>
+ © 2026 All Rights Reserved
+</footer>
+
+<script>
+const admin = "Nshdndhd";
+
+const data = {
+ MLBB:[
+  ["86 Diamond",6500],["172 Diamond",10900],
+  ["257 Diamond",15900],["343 Diamond",21400],
+  ["429 Diamond",26800],["514 Diamond",31700],
+  ["600 Diamond",37200],["706 Diamond",42900],
+  ["878 Diamond",53800],["963 Diamond",58700],
+  ["1049 Diamond",64200],["1135 Diamond",69600],
+  ["1220 Diamond",74600],["1412 Diamond",85700],
+  ["2195 Diamond",129700],["3688 Diamond",216400],
+  ["5532 Diamond",326700],["9288 Diamond",542600]
+ ],
+ PUBG:[
+  ["336 UC",20800],["672 UC",40250],
+  ["1008 UC",59650],["1344 UC",79000]
+ ],
+ CN:[
+  ["325 UC",20000],["660 UC",39900],
+  ["1800 UC",99000],["3850 UC",199000],
+  ["8100 UC",395000]
+ ],
+ PASS:[
+  ["50 + 50 Diamond",3550],
+  ["150 + 150 Diamond",10500],
+  ["250 + 250 Diamond",16800],
+  ["500 + 500 Diamond",34400],
+  ["Weekly Pass",6700],
+  ["Twilight Pass",36000],
+  ["Weekly Elite Bundle",3550],
+  ["Monthly Epic Bundle",17600]
+ ]
+};
+
+function showGame(type,el){
+ document.querySelectorAll(".game").forEach(x=>x.classList.remove("active"));
+ el.classList.add("active");
+
+ const titles={
+  MLBB:"💎 MLBB Diamond",
+  PUBG:"🎯 PUBG Special UC",
+  CN:"🌏 PUBG CN Web Global",
+  PASS:"🎁 MLBB Double / Pass"
+ };
+ document.getElementById("productTitle").textContent=titles[type];
+
+ const area=document.getElementById("products");
+ area.innerHTML="";
+
+ data[type].forEach(item=>{
+  const card=document.createElement("div");
+  card.className="product";
+
+  const name=document.createElement("h3");
+  name.textContent=item[0];
+
+  const price=document.createElement("p");
+  price.className="price";
+  price.textContent=item[1].toLocaleString()+" Ks";
+
+  const btn=document.createElement("button");
+  btn.textContent="ရွေးချယ်မည်";
+  btn.onclick=()=>{
+   document.getElementById("chosen").value=item[0]+" - "+item[1].toLocaleString()+" Ks";
+   document.getElementById("orderForm").scrollIntoView({behavior:"smooth"});
+  };
+
+  card.append(name,price,btn);
+  area.appendChild(card);
+ });
+}
+
+function sendTelegram(text){
+ const url="https://t.me/"+admin+"?text="+encodeURIComponent(text);
+ window.open(url,"_blank");
+}
+
+document.getElementById("orderForm").addEventListener("submit",function(e){
+ e.preventDefault();
+
+ const message=
+ "NI KO GAME SHOP ORDER\n"+
+ "Package: "+document.getElementById("chosen").value+"\n"+
+ "Game ID: "+document.getElementById("player").value+"\n"+
+ "Server ID: "+document.getElementById("server").value+"\n"+
+ "Game Name: "+document.getElementById("gameName").value;
+
+ sendTelegram(message);
+});
+
+function deposit(){
+ const amount=document.getElementById("amount").value;
+
+ if(!amount || Number(amount)<=0){
+  alert("ငွေပမာဏ မှန်ကန်စွာထည့်ပါ");
+  return;
+ }
+
+ sendTelegram(
+  "NI KO GAME SHOP DEPOSIT\n"+
+  "ငွေဖြည့်ပမာဏ: "+Number(amount).toLocaleString()+" Ks\n"+
+  "Payment: WavePay\n"+
+  "ဖုန်း: 09682380920\n"+
+  "အမည်: Pan Ei Zin\n"+
+  "ငွေလွှဲပြေစာကို သီးခြားပို့ပေးပါ။"
+ );
+}
+
+showGame("MLBB",document.querySelector(".game"));
+</script>
+
+</body>
+</html>
