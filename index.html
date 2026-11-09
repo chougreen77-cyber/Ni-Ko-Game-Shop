@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NI KO GAME SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#071326;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:25px 12px;background:#10264b}
+header h1{color:#42bdff}
+nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px}
+button{border:0;border-radius:9px;padding:12px;background:#168ee8;color:white;font-weight:bold}
+main{max-width:650px;margin:auto;padding:12px}
+section{background:#12213b;padding:17px;margin:14px 0;border-radius:14px}
+h2{color:#4dbaff}
+.item{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #34435c}
+.price{color:#5dceff;font-weight:bold}
+input,select{width:100%;padding:13px;margin:8px 0;border:0;border-radius:8px;background:#edf4ff;color:#111}
+.primary{width:100%;margin-top:10px}
+.small{color:#b8c8df;font-size:13px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎮 NI KO GAME SHOP</h1>
+<p>MLBB • PUBG MOBILE</p>
+</header>
+
+<nav>
+<button onclick="go('mlbb')">💎 MLBB</button>
+<button onclick="go('pubg')">🎯 PUBG UC</button>
+<button onclick="go('deposit')">💰 ငွေဖြည့်ရန်</button>
+<button onclick="go('order')">🛒 Order</button>
+</nav>
+
+<main>
+<section id="mlbb">
+<h2>💎 MLBB Diamond</h2>
+<div id="mlbbList"></div>
+<h2>🎁 Double Diamond</h2>
+<div id="doubleList"></div>
+<h2>🎫 Pass & Bundle</h2>
+<div id="passList"></div>
+</section>
+
+<section id="pubg">
+<h2>🎯 PUBG Special UC</h2>
+<div id="specialList"></div>
+<h2>🌐 PUBG CN Web Global</h2>
+<div id="cnList"></div>
+</section>
+
+<section id="order">
+<h2>🛒 Order မှာရန်</h2>
+<label>Game</label>
+<select id="game" onchange="updatePackages()">
+<option value="MLBB">MLBB</option>
+<option value="PUBG Special UC">PUBG Special UC</option>
+<option value="PUBG CN Web Global">PUBG CN Web Global</option>
+</select>
+<label>Package</label>
+<select id="package"></select>
+<label>Player ID</label>
+<input id="playerId" placeholder="Player ID">
+<label>Server ID</label>
+<input id="serverId" placeholder="Server ID">
+<label>Game Name</label>
+<input id="playerName" placeholder="Game Name">
+<button class="primary" onclick="sendOrder()">Order အချက်အလက် ပြင်ဆင်ရန်</button>
+<p id="orderMessage" class="small"></p>
+</section>
+
+<section id="deposit">
+<h2>💰 ငွေဖြည့်ရန်</h2>
+<p>WavePay ဖုန်းနံပါတ်</p>
+<h3>📱 09682380920</h3>
+<p>အမည် - Pan Ei Zin</p>
+<label>ငွေဖြည့်မည့် ပမာဏ (Ks)</label>
+<input id="amount" type="number" min="1" placeholder="ဥပမာ 5000">
+<label>ပြေစာ Screenshot</label>
+<input id="receipt" type="file" accept="image/*">
+<img id="preview" style="display:none;width:100%;border-radius:10px;margin-top:10px">
+<button class="primary" onclick="prepareDeposit()">ပြေစာတင်ရန်</button>
+<p id="depositMessage" class="small"></p>
+</section>
+
+<section>
+<h2>📢 ဆိုင်အသိပေးချက်</h2>
+<p>• ငွေလွှဲအချက်အလက်ကို သေချာစစ်ဆေးပါ။</p>
+<p>• ပြေစာ၊ Player ID နဲ့ Server ID ကို မှန်ကန်စွာ ဖြည့်ပါ။</p>
+<p>• Admin စစ်ဆေးပြီးမှ Balance ဖြည့်ပေးပါမည်။</p>
+</section>
+</main>
+
+<script>
+const prices={
+MLBB:[
+["86 Diamond",5500],["172 Diamond",10900],
+["257 Diamond",15900],["343 Diamond",21400],
+["429 Diamond",26800],["514 Diamond",31700],
+["600 Diamond",37200],["706 Diamond",42900],
+["878 Diamond",53800],["963 Diamond",58700],
+["1049 Diamond",64200],["1135 Diamond",69600],
+["1220 Diamond",74600],["1412 Diamond",85700],
+["2195 Diamond",129700],["3688 Diamond",216400],
+["5532 Diamond",326700],["9288 Diamond",542600]
+],
+DOUBLE:[
+["50+50 Double",3550],["150+150 Double",10500],
+["250+250 Double",16800],["500+500 Double",34400]
+],
+PASS:[
+["Weekly Pass",6700],["Twilight Pass",36000],
+["Weekly Elite Bundle",3550],["Monthly Epic Bundle",17600]
+],
+SPECIAL:[
+["336 UC",20800],["672 UC",40250],
+["1008 UC",59650],["1344 UC",79000]
+],
+CN:[
+["325 UC",20000],["660 UC",39900],
+["1800 UC",99000],["3850 UC",199000],
+["8100 UC",395000]
+]
+};
+
+function renderList(id,items){
+ document.getElementById(id).innerHTML=items.map(x=>
+ `<div class="item"><span>${x[0]}</span><span class="price">${x[1].toLocaleString()} Ks</span></div>`
+ ).join("");
+}
+
+renderList("mlbbList",prices.MLBB);
+renderList("doubleList",prices.DOUBLE);
+renderList("passList",prices.PASS);
+renderList("specialList",prices.SPECIAL);
+renderList("cnList",prices.CN);
+
+function go(id){
+ document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+function updatePackages(){
+ const game=document.getElementById("game").value;
+ let items=game==="MLBB"
+ ? [...prices.MLBB,...prices.DOUBLE,...prices.PASS]
+ : game==="PUBG Special UC" ? prices.SPECIAL : prices.CN;
+
+ document.getElementById("package").innerHTML=
+ items.map(x=>`<option value="${x[0]}">${x[0]} - ${x[1].toLocaleString()} Ks</option>`).join("");
+}
+updatePackages();
+
+function sendOrder(){
+ const game=document.getElementById("game").value;
+ const pack=document.getElementById("package").value;
+ const id=document.getElementById("playerId").value.trim();
+ const server=document.getElementById("serverId").value.trim();
+ const name=document.getElementById("playerName").value.trim();
+
+ if(!id || !server || !name){
+  document.getElementById("orderMessage").textContent="အချက်အလက်အားလုံး ဖြည့်ပေးပါ။";
+  return;
+ }
+
+ const msg=`NI KO GAME SHOP ORDER\nGame: ${game}\nPackage: ${pack}\nPlayer ID: ${id}\nServer ID: ${server}\nName: ${name}`;
+ document.getElementById("orderMessage").textContent=msg;
+}
+
+document.getElementById("receipt").addEventListener("change",function(){
+ const file=this.files[0];
+ const preview=document.getElementById("preview");
+ if(file){
+  preview.src=URL.createObjectURL(file);
+  preview.style.display="block";
+ }
+});
+
+function prepareDeposit(){
+ const amount=document.getElementById("amount").value;
+ const receipt=document.getElementById("receipt").files[0];
+ const msg=document.getElementById("depositMessage");
+
+ if(!amount || Number(amount)<=0 || !receipt){
+  msg.textContent="ငွေပမာဏနဲ့ ပြေစာ Screenshot ဖြည့်ပေးပါ။";
+  return;
+ }
+
+ if(receipt.size>2*1024*1024){
+  msg.textContent="ပြေစာပုံကို 2MB အောက် ရွေးပေးပါ။";
+  return;
+ }
+
+ msg.textContent="အချက်အလက် ပြင်ဆင်ပြီးပါပြီ။ Admin ဆီ အလိုအလျောက်ပို့ရန် Backend ချိတ်ဆက်ဖို့ လိုပါသေးတယ်။";
+}
+</script>
+</body>
+</html>
