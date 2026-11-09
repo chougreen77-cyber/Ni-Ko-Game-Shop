@@ -1,0 +1,73 @@
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const props = PropertiesService.getScriptProperties();
+    const token = props.getProperty("BOT_TOKEN");
+    const chatId = props.getProperty("ADMIN_CHAT_ID");
+
+    if (!token || !chatId) {
+      throw new Error("Bot settings မပြည့်စုံပါ။");
+    }
+
+    const api = "https://api.telegram.org/bot" + token + "/";
+
+    if (data.action === "order") {
+      const message =
+        "🛒 NI KO GAME SHOP ORDER\n\n" +
+        "🎮 Game: " + data.game + "\n" +
+        "💎 Package: " + data.package + "\n" +
+        "🆔 Player ID: " + data.playerId + "\n" +
+        "🌐 Server ID: " + data.serverId + "\n" +
+        "👤 Game Name: " + data.playerName;
+
+      UrlFetchApp.fetch(api + "sendMessage", {
+        method: "post",
+        payload: {
+          chat_id: chatId,
+          text: message
+        }
+      });
+    }
+
+    else if (data.action === "deposit") {
+      const blob = Utilities.newBlob(
+        Utilities.base64Decode(data.image),
+        data.mimeType,
+        data.fileName
+      );
+
+      const caption =
+        "💰 NI KO GAME SHOP ငွေဖြည့်ပြေစာ\n\n" +
+        "💵 Amount: " + data.amount + " Ks\n" +
+        "📌 Admin စစ်ဆေးပေးပါ။";
+
+      UrlFetchApp.fetch(api + "sendPhoto", {
+        method: "post",
+        payload: {
+          chat_id: chatId,
+          photo: blob,
+          caption: caption
+        }
+      });
+    }
+
+    return ContentService.createTextOutput("OK");
+
+  } catch (err) {
+    return ContentService.createTextOutput("ERROR: " + err.message);
+  }
+}
+
+// Admin Chat ID ရှာရန် ဒီ function ကို Run ပါ
+function findAdminChatId() {
+  const token = PropertiesService
+    .getScriptProperties()
+    .getProperty("BOT_TOKEN");
+
+  const url = "https://api.telegram.org/bot" + token + "/getUpdates";
+  const result = UrlFetchApp.fetch(url);
+  const json = JSON.parse(result.getContentText());
+
+  Logger.log(JSON.stringify(json, null, 2));
+}
