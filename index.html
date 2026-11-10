@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NI KO GAME SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080a10;color:#f5f6ff;font-family:Arial,sans-serif;padding-bottom:90px}
+header{position:sticky;top:0;z-index:10;background:#080b13;border-bottom:1px solid #252d40;padding:14px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:19px;font-weight:bold;color:#69a5ff}
+.balance{border:1px solid #3269c5;color:#80b3ff;border-radius:25px;padding:9px;font-size:13px}
+main{padding:15px;max-width:800px;margin:auto}
+.page{display:none}.page.active{display:block}
+.banner{min-height:175px;border-radius:20px;padding:22px;margin:10px 0 18px;background:linear-gradient(120deg,#071b45,#123f83,#10152b);border:1px solid #3679e8;text-align:center;display:flex;flex-direction:column;justify-content:center;box-shadow:0 0 20px #174da555}
+.banner h1{font-size:27px;margin:8px}.banner p{color:#b9d4ff}
+.notice{background:#171a24;border:1px solid #303747;border-radius:13px;padding:13px;margin:15px 0;text-align:center;color:#ddd}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+button{cursor:pointer}
+.quick button,.secondary{background:#101a30;border:1px solid #28559b;color:#dceaff;padding:13px;border-radius:12px}
+.search,input,select{width:100%;padding:14px;margin:8px 0 14px;background:#15161d;color:white;border:1px solid #34394a;border-radius:11px;font-size:15px}
+.tabs{display:flex;gap:10px;margin:15px 0}
+.tabs button,.price-switch button{border:1px solid #34394a;background:#171923;color:#ddd;border-radius:25px;padding:11px 20px}
+.tabs button.selected,.price-switch button.selected{background:#347ff0;color:white;border-color:#347ff0}
+.games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.game{background:#171a24;border:1px solid #303b54;border-radius:16px;overflow:hidden}
+.game-art{height:125px;display:flex;align-items:center;justify-content:center;font-size:55px;background:linear-gradient(140deg,#112c59,#18213c,#080b15)}
+.game-info{padding:12px}.game-info h3{font-size:15px;min-height:35px}
+.primary{background:linear-gradient(100deg,#286de0,#438eff);border:0;color:white;padding:12px;border-radius:10px;font-weight:bold;width:100%}
+.back{color:#9bbcff;margin:12px 0;display:inline-block}
+.game-heading{display:flex;gap:15px;align-items:center;margin:20px 0}
+.game-heading .game-art{width:85px;height:85px;border-radius:15px;flex-shrink:0;font-size:38px}
+.muted{color:#9a9eac;font-size:14px}
+.price-switch{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:20px 0}
+.packages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.package{background:#171b27;border:1px solid #34415b;border-radius:15px;padding:12px;text-align:center}
+.package .gem{font-size:32px;margin:8px}
+.package h4{margin:5px 0 12px;min-height:35px}
+.panel{background:#141720;border:1px solid #303747;padding:16px;border-radius:17px;margin:15px 0}
+.item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #303747}
+.remove{color:#ff7777;background:none;border:0}
+.amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.amounts button{background:#0c1019;border:1px solid #41485b;color:white;padding:13px 4px;border-radius:10px}
+.payment{border:1px solid #353d50;border-radius:13px;padding:13px;margin:10px 0;background:#0c1018}
+.payment strong{color:#a9caff}
+.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#151821;border-top:1px solid #34415b;display:grid;grid-template-columns:repeat(5,1fr);padding:9px 3px 7px}
+.bottom button{background:none;border:0;color:#a7aab6;font-size:12px;padding:5px 0}
+.bottom button span{display:block;font-size:22px;margin-bottom:4px}
+.bottom button.active{color:#69a5ff}
+.empty{text-align:center;color:#a4a8b5;padding:30px 10px}
+@media(min-width:600px){.games{grid-template-columns:repeat(3,1fr)}.packages{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="balance">◉ <span id="balance">0</span> Ks</div>
+ <div class="logo">🎮 NI KO GAME SHOP</div>
+</header>
+
+<main>
+<section id="home" class="page active">
+ <div class="banner">
+  <small>WELCOME TO</small>
+  <h1>NI KO GAME SHOP</h1>
+  <p>GAME TOP UP WEBSITE</p>
+  <small>FAST • EASY • SIMPLE</small>
+ </div>
+ <div class="notice">🎮 NI KO GAME SHOP မှ ကြိုဆိုပါတယ်။ Game ရွေးပြီး Package ဝယ်ယူနိုင်ပါတယ်။</div>
+ <div class="quick">
+  <button onclick="showPage('orders')">🎮 Order မှာရန်</button>
+  <button onclick="contactAdmin()">✈ Admin ဆက်သွယ်ရန်</button>
+ </div>
+ <input class="search" id="search" placeholder="🔍 Search Games..." oninput="searchGames()">
+ <div class="tabs">
+  <button class="selected" id="allTab" onclick="filterGames('all')">All Games</button>
+  <button id="topTab" onclick="filterGames('top')">Topup</button>
+ </div>
+ <div class="games" id="gamesList"></div>
+</section>
+
+<section id="products" class="page">
+ <div class="back" onclick="showPage('home')">← Back</div>
+ <div class="game-heading">
+  <div class="game-art" id="selectedArt">💎</div>
+  <div><h2 id="selectedName">Game</h2><div class="muted">Select a package</div></div>
+ </div>
+ <div class="notice" id="idNotice"></div>
+ <div class="price-switch">
+  <b>PACKAGES</b>
+  <div>
+   <button class="selected" id="normalBtn" onclick="setVIP(false)">Normal</button>
+   <button id="vipBtn" onclick="setVIP(true)">VIP</button>
+  </div>
+ </div>
+ <div class="notice">Normal / VIP စျေးနှုန်းကို Admin ထံမှ အတည်ပြုပါ။ လက်ရှိပြထားသောစျေးသည် တူညီပါသည်။</div>
+ <div class="packages" id="packagesList"></div>
+</section>
+
+<section id="cart" class="page">
+ <h2>🛒 My Cart</h2>
+ <div class="panel" id="cartList"></div>
+ <h3 id="cartTotal">Total: 0 Ks</h3>
+ <button class="primary" onclick="goCheckout()">Continue Order</button>
+</section>
+
+<section id="orders" class="page">
+ <h2>📦 Order</h2>
+ <div class="panel">
+  <label>Game</label>
+  <select id="orderGame" onchange="updateOrderFields()">
+   <option value="MLBB">Mobile Legends</option>
+   <option value="PUBG">PUBG Mobile</option>
+   <option value="Stars">Telegram Stars / Premium</option>
+   <option value="MCC">Magic Chess Go Go</option>
+   <option value="HOK">Honor of Kings</option>
+  </select>
+  <div id="orderFields"></div>
+  <label>Package</label>
+  <input id="orderPackage" placeholder="Package name">
+  <label>Customer Name</label>
+  <input id="customerName" placeholder="Your name">
+  <button class="primary" onclick="sendOrder()">Send Order to Telegram</button>
+ </div>
+</section>
+
+<section id="wallet" class="page">
+ <h2>💳 Wallet</h2>
+ <div class="panel">
+  <div class="muted">Displayed Balance</div>
+  <h1 style="color:#78aaff" id="walletBalance">0 Ks</h1>
+  <div class="notice">Wallet Balance သည် Demo ဖြစ်ပြီး ငွေဖြည့်မှုကို Admin က အတည်ပြုရပါမည်။</div>
+  <h3>PAYMENT METHOD</h3>
+  <div class="payment">🔵 <strong>WavePay</strong><p class="muted">ငွေလွှဲအချက်အလက်ကို Admin ထံမှ အတည်ပြုပါ။</p></div>
+  <label>Amount (MMK)</label>
+  <div class="amounts">
+   <button onclick="setAmount(5000)">5,000</button>
+   <button onclick="setAmount(10000)">10,000</button>
+   <button onclick="setAmount(20000)">20,000</button>
+   <button onclick="setAmount(30000)">30,000</button>
+   <button onclick="setAmount(50000)">50,000</button>
+   <button onclick="setAmount(100000)">100,000</button>
+  </div>
+  <input id="amount" type="number" min="1" placeholder="Enter amount">
+  <button class="primary" onclick="sendTopup()">Request Wallet Top-up</button>
+ </div>
+</section>
+
+<section id="profile" class="page">
+ <h2>👤 Profile</h2>
+ <div class="panel">
+  <label>Your Name</label>
+  <input id="profileName" placeholder="Enter your name">
+  <label>Telegram Username</label>
+  <input id="profileTelegram" placeholder="@username">
+  <button class="primary" onclick="saveProfile()">Save Profile</button>
+ </div>
+ <div class="panel">
+  <h3>Contact Admin</h3>
+  <p>@Nshdndhd</p>
+  <button class="secondary" onclick="contactAdmin()">Telegram ဆက်သွယ်ရန်</button>
+ </div>
+</section>
+</main>
+
+<nav class="bottom">
+ <button class="active" onclick="showPage('home',this)"><span>⌂</span>Home</button>
+ <button onclick="showPage('orders',this)"><span>▤</span>Order</button>
+ <button onclick="showPage('wallet',this)"><span>＋</span>Wallet</button>
+ <button onclick="showPage('cart',this)"><span>🛒</span>Cart</button>
+ <button onclick="showPage('profile',this)"><span>♙</span>Profile</button>
+</nav>
+
+<script>
+const ADMIN="Nshdndhd";
+
+const games=[
+ {id:"MLBB",name:"Mobile Legends",art:"⚔️"},
+ {id:"PUBG",name:"PUBG Mobile",art:"🔫"},
+ {id:"Stars",name:"Telegram Stars",art:"⭐"},
+ {id:"MCC",name:"Magic Chess Go Go",art:"♟️"},
+ {id:"HOK",name:"Honor of Kings",art:"👑"}
+];
+
+const products={
+ MLBB:[
+ ["Weekly Pass",7000],["Weekly Pass ×2",13900],["Weekly Pass ×3",20900],
+ ["14 Diamonds",1150],["28 Diamonds",2250],["56 Diamonds",3400],
+ ["86 Diamonds",5700],["172 Diamonds",11250],["257 Diamonds",16250],
+ ["343 Diamonds",21700],["429 Diamonds",27300],["514 Diamonds",32300],
+ ["600 Diamonds",37750],["706 Diamonds",43500],["878 Diamonds",54550],
+ ["1049 Diamonds",65300],["1220 Diamonds",75700],["1412 Diamonds",87000],
+ ["1584 Diamonds",97900],["1755 Diamonds",108600],
+ ["2195 Diamonds",132000],["3688 Diamonds",219900]
+ ],
+ PUBG:[
+ ["60 UC",4511],["325 UC",21694],["660 UC",42862],
+ ["1800 UC",107476],["3850 UC",214052],["8100 UC",427813]
+ ],
+ Stars:[
+ ["50 Stars",4073],["100 Stars",7809],["150 Stars",11582],
+ ["250 Stars",18872],["500 Stars",37443],
+ ["Premium 3 Months",60129],["Premium 6 Months",80922],
+ ["Premium 12 Months",144199]
+ ],
+ MCC:[
+ ["Weekly Pass",8714],["86 Diamonds",5638],["172 Diamonds",10866],
+ ["257 Diamonds",16148],["706 Diamonds",42417],
+ ["2195 Diamonds",127006],["3688 Diamonds",211329],
+ ["5532 Diamonds",316356]
+ ],
+ HOK:[
+ ["16 Tokens",1078],["80 Tokens",4343],["240 Tokens",12483],
+ ["400 Tokens",20670],["560 Tokens",28957],
+ ["800+30 Tokens",41140],["1200+45 Tokens",61511],
+ ["2400+108 Tokens",122570],["4000+180 Tokens",205000],
+ ["8000+360 Tokens",407801],["Weekly Card",4792],
+ ["Weekly Card Plus",14171]
+ ]
+};
+
+let currentGame="MLBB";
+let cart=[];
+
+function showPage(id,btn){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".bottom button").forEach(b=>b.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ if(id==="cart")renderCart();
+ if(id==="orders")updateOrderFields();
+ window.scrollTo(0,0);
+}
+
+function renderGames(list=games){
+ const box=document.getElementById("gamesList");
+ box.innerHTML="";
+ list.forEach(g=>{
+  box.innerHTML+=`<div class="game">
+   <div class="game-art">${g.art}</div>
+   <div class="game-info"><h3>${g.name}</h3>
+   <button class="primary" onclick="openGame('${g.id}')">TOPUP</button></div>
+  </div>`;
+ });
+}
+
+function searchGames(){
+ const q=document.getElementById("search").value.toLowerCase();
+ renderGames(games.filter(g=>g.name.toLowerCase().includes(q)));
+}
+
+function filterGames(type){
+ document.getElementById("allTab").classList.toggle("selected",type==="all");
+ document.getElementById("topTab").classList.toggle("selected",type==="top");
+ renderGames(games);
+}
+
+function openGame(id){
+ currentGame=id;
+ const g=games.find(x=>x.id===id);
+ document.getElementById("selectedName").textContent=g.name;
+ document.getElementById("selectedArt").textContent=g.art;
+ document.getElementById("idNotice").textContent=
+ id==="Stars"?"Telegram Username (@username) ထည့်ပေးပါ။":
+ (id==="MLBB"||id==="MCC")?"Player ID နှင့် Server ID လိုအပ်ပါတယ်။":"Player ID ထည့်ပေးပါ။";
+ showPage("products");
+ renderProducts();
+}
+
+function setVIP(v){
+ document.getElementById("normalBtn").classList.toggle("selected",!v);
+ document.getElementById("vipBtn").classList.toggle("selected",v);
+}
+
+function renderProducts(){
+ const box=document.getElementById("packagesList");
+ box.innerHTML="";
+ products[currentGame].forEach((p,i)=>{
+  const icon=currentGame==="Stars"?"⭐":currentGame==="PUBG"?"🪙":"💎";
+  box.innerHTML+=`<div class="package">
+   <div class="gem">${icon}</div><h4>${p[0]}</h4>
+   <button class="primary" onclick="addCart('${currentGame}',${i})">${p[1].toLocaleString()} Ks</button>
+  </div>`;
+ });
+}
+
+function addCart(game,index){
+ const p=products[game][index];
+ cart.push({game,name:p[0],price:p[1]});
+ alert(p[0]+" ကို Cart ထဲထည့်ပြီးပါပြီ။");
+}
+
+function renderCart(){
+ const box=document.getElementById("cartList");
+ box.innerHTML="";
+ let total=0;
+ if(cart.length===0)box.innerHTML='<div class="empty">Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ။</div>';
+ cart.forEach((item,i)=>{
+  total+=item.price;
+  box.innerHTML+=`<div class="item">
+   <div>${item.game}<br><b>${item.name}</b><br>${item.price.toLocaleString()} Ks</div>
+   <button class="remove" onclick="removeItem(${i})">Remove</button>
+  </div>`;
+ });
+ document.getElementById("cartTotal").textContent="Total: "+total.toLocaleString()+" Ks";
+}
+
+function removeItem(i){cart.splice(i,1);renderCart()}
+function goCheckout(){
+ if(!cart.length){alert("Cart ထဲမှာ Package အရင်ထည့်ပါ။");return;}
+ const names=cart.map(x=>x.game+" - "+x.name).join(", ");
+ document.getElementById("orderPackage").value=names;
+ showPage("orders");
+}
+
+function updateOrderFields(){
+ const g=document.getElementById("orderGame").value;
+ const box=document.getElementById("orderFields");
+ if(g==="Stars"){
+  box.innerHTML='<label>Telegram Username</label><input id="playerID" placeholder="@username">';
+ }else if(g==="MLBB"||g==="MCC"){
+  box.innerHTML='<label>Player ID</label><input id="playerID" placeholder="Player ID"><label>Server ID</label><input id="serverID" placeholder="Server ID">';
+ }else{
+  box.innerHTML='<label>Player ID</label><input id="playerID" placeholder="Player ID">';
+ }
+}
+
+function sendOrder(){
+ const game=document.getElementById("orderGame").value;
+ const player=document.getElementById("playerID")?.value||"";
+ const server=document.getElementById("serverID")?.value||"";
+ const pack=document.getElementById("orderPackage").value;
+ const name=document.getElementById("customerName").value;
+ if(!player||!pack){alert("လိုအပ်တဲ့အချက်အလက်တွေ ဖြည့်ပေးပါ။");return;}
+ const msg=`NI KO GAME SHOP ORDER\nGame: ${game}\nPlayer: ${player}\nServer: ${server}\nPackage: ${pack}\nName: ${name}`;
+ window.open("https://t.me/"+ADMIN+"?text="+encodeURIComponent(msg),"_blank");
+}
+
+function setAmount(n){document.getElementById("amount").value=n}
+function sendTopup(){
+ const amount=Number(document.getElementById("amount").value);
+ if(!amount||amount<1){alert("ငွေပမာဏ ဖြည့်ပေးပါ။");return;}
+ const msg=`NI KO GAME SHOP Wallet Top-up Request\nAmount: ${amount.toLocaleString()} MMK\nငွေလွှဲအထောက်အထားကို Admin ထံ ပေးပို့ပါ။`;
+ window.open("https://t.me/"+ADMIN+"?text="+encodeURIComponent(msg),"_blank");
+}
+
+function saveProfile(){
+ alert("Profile ကို ဒီ Demo မှာသာ ပြသထားပါတယ်။");
+}
+function contactAdmin(){window.open("https://t.me/"+ADMIN,"_blank")}
+
+renderGames();
+updateOrderFields();
+</script>
+</body>
+</html>
