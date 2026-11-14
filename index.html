@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NI KO GAME SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090909;color:#fff;
+ font-family:Arial,sans-serif
+}
+header{
+ text-align:center;padding:30px 12px;
+ background:linear-gradient(135deg,#180000,#850000,#160000);
+ border-bottom:2px solid #f22
+}
+header h1{color:#ff3838;font-size:29px;margin:9px}
+header p{color:#eee}
+header small{color:#ffaaaa}
+.container{max-width:950px;margin:auto;padding:15px}
+.notice{
+ background:#291900;border:1px solid #a87500;
+ padding:13px;border-radius:10px;color:#ffe09a;
+ line-height:1.8;margin-bottom:16px;font-size:14px
+}
+.search{
+ width:100%;padding:13px;border-radius:9px;
+ background:#191919;border:1px solid #555;
+ color:white;font-size:15px;margin-bottom:15px
+}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:14px}
+.tabs button{
+ background:#222;color:white;border:1px solid #555;
+ border-radius:20px;padding:10px 14px;white-space:nowrap;
+ cursor:pointer
+}
+.tabs button.active{background:#d00000;border-color:red}
+.banner{
+ display:flex;align-items:center;gap:14px;
+ background:linear-gradient(120deg,#300000,#181818);
+ border:1px solid #632020;border-radius:12px;
+ padding:12px;margin:17px 0 12px
+}
+.game-icon{
+ width:78px;height:78px;flex-shrink:0;
+ display:flex;align-items:center;justify-content:center;
+ border-radius:15px;font-size:43px;
+ background:linear-gradient(135deg,#9b0000,#222);
+ border:1px solid #ff4545
+}
+.banner h2{font-size:17px;color:#ff5555;margin:0 0 6px}
+.banner p{font-size:12px;color:#bbb;margin:0}
+.products{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(215px,1fr));
+ gap:12px
+}
+.product{
+ background:#171717;border:1px solid #383838;
+ border-radius:12px;padding:14px
+}
+.product h3{font-size:15px;margin:0 0 12px}
+.price{
+ display:flex;justify-content:space-between;
+ border-top:1px solid #333;padding:10px 0;
+ font-size:14px;gap:8px
+}
+.price strong{color:#ff5555;white-space:nowrap}
+.order{
+ width:100%;padding:11px;background:#c90000;
+ border:0;border-radius:8px;color:white;
+ font-weight:bold;font-size:14px;cursor:pointer
+}
+.order:hover{background:#f22}
+.contact{
+ display:block;text-align:center;background:#087d42;
+ color:white;text-decoration:none;padding:14px;
+ border-radius:9px;margin-top:20px
+}
+footer{text-align:center;padding:25px;color:#999;font-size:13px}
+.empty{text-align:center;color:#aaa;padding:25px}
+</style>
+</head>
+<body>
+
+<header>
+ <div>WELCOME TO</div>
+ <h1>NI KO GAME SHOP</h1>
+ <p>💎 GAME TOP UP & DIGITAL PRODUCTS 💎</p>
+ <small>FAST • EASY • TRUSTED</small>
+</header>
+
+<main class="container">
+
+<div class="notice">
+ 📢 စျေးနှုန်းများ အတက်အကျရှိနိုင်ပါသည်။<br>
+ ⭐ Telegram Star မဝယ်ယူမီ လက်ရှိစျေးနှုန်း ပြန်မေးပါ။<br>
+ ⚠️ ငွေမလွှဲမီ Admin ထံ စျေးနှုန်းအတည်ပြုပါ။
+</div>
+
+<input class="search" id="search"
+ placeholder="🔍 Package / စျေးနှုန်း ရှာရန်..."
+ oninput="render()">
+
+<div class="tabs" id="tabs"></div>
+<div id="shop"></div>
+
+<a class="contact" href="https://t.me/Nshdndhd" target="_blank">
+ 📩 ADMIN ကို ဆက်သွယ်ရန် @Nshdndhd
+</a>
+
+</main>
+
+<footer>
+ © 2026 NI KO GAME SHOP<br>
+ THANK YOU FOR SHOPPING ❤️
+</footer>
+
+<script>
+
+// ADMIN USERNAME ထည့်ပြီးသား
+const ADMIN = "Nshdndhd";
+
+const products = [
+{
+ category:"PUBG UC",
+ icon:"🎯",
+ description:"PUBG Mobile UC & Packs",
+ items:[
+ ["60 UC",4700],["120 UC",9400],["180 UC",14100],
+ ["325 UC",23200],["660 UC",46000],["720 UC",50700],
+ ["1380 UC",96700],["1800 UC",116600],
+ ["3850 UC",233200],["8100 UC",459800],
+ ["First Purchase Pack",4900],["Firearms Pack",14600],
+ ["Mythic Emblem Pack",23600],["1 Month",4900],
+ ["Weekly Deal Pack 1",4900],["Weekly Deal Pack 2",15200],
+ ["Weekly Mythic Emblem",15200],
+ ["Elite Pass Lv1-50",28300],
+ ["Elite Pass Lv1-100",56500],
+ ["Elite Pass Plus Lv1-100",132000]
+ ]
+},
+{
+ category:"MAGIC CHESS GO GO",
+ icon:"♟️",
+ description:"MCGG Diamonds & Weekly Pass",
+ items:[
+ ["Weekly Pass",10000],
+ ["86 Diamonds",6300],["172 Diamonds",12500],
+ ["257 Diamonds",18700],["344 Diamonds",25000],
+ ["516 Diamonds",37500],["706 Diamonds",49900],
+ ["1346 Diamonds",93600],["1825 Diamonds",124700],
+ ["2195 Diamonds",149700],["3688 Diamonds",249400],
+ ["5532 Diamonds",374100],["9288 Diamonds",623500],
+ ["50+50",4000],["150+150",12000],
+ ["250+250",20000],["500+500",40000]
+ ]
+},
+{
+ category:"FREE FIRE",
+ icon:"🔥",
+ description:"Free Fire Diamonds & Pass",
+ items:[
+ ["33 Diamonds",1650],["68 Diamonds",3200],
+ ["101 Diamonds",4600],["172 Diamonds",7400],
+ ["310 Diamonds",14200],["517 Diamonds",21800],
+ ["690 Diamonds",26300],["1052 Diamonds",45200],
+ ["1801 Diamonds",70700],["3698 Diamonds",152300],
+ ["Weekly Pass",9800],["Monthly Pass",44100],
+ ["Weekly Lite",5000]
+ ]
+},
+{
+ category:"TELEGRAM STAR",
+ icon:"⭐",
+ description:"Telegram Stars",
+ items:[
+ ["50 Stars",3700],["100 Stars",7400],
+ ["150 Stars",10800],["200 Stars",14400],
+ ["250 Stars",18000],["300 Stars",21600],
+ ["350 Stars",25200],["400 Stars",28800],
+ ["450 Stars",32400],["500 Stars",36000]
+ ]
+},
+{
+ category:"TELEGRAM PROFILE GIFT",
+ icon:"🎁",
+ description:"Telegram Profile Gifts",
+ items:[
+ ["💝 / 🧸",1100],["🎁 / 🌹",1800],
+ ["🎂 / 💐",3500],["🚀 / 🍾",3500],
+ ["🏆 / 💍",7000],["💎 / 💎",7000]
+ ]
+},
+{
+ category:"MOBILE LEGENDS",
+ icon:"💎",
+ description:"MLBB Diamond & Pass",
+ items:[
+ ["Weekly Pass (WP)",6600],
+ ["Twilight Pass",36000],
+ ["Weekly Elite Bundle",3550],
+ ["Monthly Epic Bundle",17600],
+ ["5 Diamonds",700],["11 Diamonds",1300],
+ ["86 Diamonds",5500],["172 Diamonds",10900],
+ ["257 Diamonds",15900],["343 Diamonds",21400],
+ ["429 Diamonds",26800],["514 Diamonds",31700],
+ ["600 Diamonds",37200],["706 Diamonds",42900],
+ ["878 Diamonds",53800],["963 Diamonds",58700],
+ ["1049 Diamonds",64200],["1135 Diamonds",69600],
+ ["1220 Diamonds",74600],["1412 Diamonds",85700],
+ ["2195 Diamonds",129700],["3688 Diamonds",216400],
+ ["5532 Diamonds",326700],["9288 Diamonds",542600],
+ ["50+50 Diamonds",3550],["150+150 Diamonds",10500],
+ ["250+250 Diamonds",16800],["500+500 Diamonds",34400]
+ ]
+}
+];
+
+let selected="ALL";
+
+function money(number){
+ return number.toLocaleString("en-US")+" Ks";
+}
+
+function makeTabs(){
+ const names=["ALL",...products.map(p=>p.category)];
+ document.getElementById("tabs").innerHTML=names.map(name=>
+ `<button class="${selected===name?'active':''}"
+ onclick="choose('${name}')">${name==="ALL"?"အားလုံး":name}</button>`
+ ).join("");
+}
+
+function choose(name){
+ selected=name;
+ makeTabs();
+ render();
+}
+
+function render(){
+ const search=document.getElementById("search").value.toLowerCase();
+ let html="";
+ let count=0;
+
+ products.forEach(group=>{
+  if(selected!=="ALL" && selected!==group.category)return;
+
+  const matched=group.items.filter(item=>
+   item[0].toLowerCase().includes(search)
+  );
+
+  if(!matched.length)return;
+  count+=matched.length;
+
+  html+=`
+  <div class="banner">
+   <div class="game-icon">${group.icon}</div>
+   <div>
+    <h2>${group.category}</h2>
+    <p>${group.description}</p>
+   </div>
+  </div>
+  <div class="products">`;
+
+  matched.forEach(item=>{
+   html+=`
+   <div class="product">
+    <h3>${item[0]}</h3>
+    <div class="price">
+     <span>စျေးနှုန်း</span>
+     <strong>${money(item[1])}</strong>
+    </div>
+    <button class="order"
+     onclick="orderNow('${group.category}','${item[0]}',${item[1]})">
+     🛒 ORDER မှာရန်
+    </button>
+   </div>`;
+  });
+
+  html+="</div>";
+ });
+
+ if(!count)html='<div class="empty">ရှာမတွေ့ပါ။</div>';
+ document.getElementById("shop").innerHTML=html;
+}
+
+function orderNow(category,item,price){
+ let details="";
+
+ if(category==="MOBILE LEGENDS"){
+  const id=prompt("Mobile Legends Game ID ထည့်ပါ။");
+  if(id===null || !id.trim())return;
+  const server=prompt("Server ID ထည့်ပါ။");
+  if(server===null || !server.trim())return;
+  details="Game ID: "+id+"\nServer ID: "+server;
+ }
+ else if(category==="PUBG UC"){
+  const id=prompt("PUBG ID ထည့်ပါ။");
+  if(id===null || !id.trim())return;
+  details="PUBG ID: "+id;
+ }
+ else if(category==="TELEGRAM STAR" ||
+         category==="TELEGRAM PROFILE GIFT"){
+  const username=prompt("Telegram Username ထည့်ပါ။");
+  if(username===null || !username.trim())return;
+  details="Telegram Username: "+username;
+ }
+ else{
+  const id=prompt("Player ID ထည့်ပါ။");
+  if(id===null || !id.trim())return;
+  details="Player ID: "+id;
+ }
+
+ const message=
+ "NI KO GAME SHOP ORDER\n"+
+ "Category: "+category+"\n"+
+ "Package: "+item+"\n"+
+ "Price: "+money(price)+"\n"+
+ details+"\n"+
+ "Admin: @"+ADMIN;
+
+ const url="https://t.me/share/url?url=&text="+
+ encodeURIComponent(message);
+
+ window.open(url,"_blank");
+}
+
+makeTabs();
+render();
+
+</script>
+</body>
+</html>
